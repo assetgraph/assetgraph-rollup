@@ -1,0 +1,52 @@
+{
+  "name": "assetgraph-rollup",
+  "version": "0.0.0",
+  "description": "Add rollup bundling support to assetgraph",
+  "main": "lib/assetgraph-rollup.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "assetgraph": "^6.2.1",
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-standard": "^16.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.2",
+    "mocha": "^8.2.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.2",
+    "rollup": "^2.32.1",
+    "unexpected": "^11.15.0",
+    "unexpected-assetgraph": "^1.1.2"
+  },
+  "scripts": {
+    "lint": "eslint . && prettier --check '**/*.{js,json,css,md}'",
+    "test": "mocha",
+    "test:ci": "npm run coverage",
+    "coverage": "NODE_ENV=development nyc --reporter=lcov --reporter=text --all -- npm test && echo google-chrome coverage/lcov-report/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/assetgraph/assetgraph-rollup.git"
+  },
+  "keywords": [
+    "assetgraph",
+    "rollup",
+    "bundle",
+    "esm"
+  ],
+  "author": "Andreas Lind <andreaslindpetersen@gmail.com>",
+  "license": "BSD-3-Clause",
+  "nyc": {
+    "include": [
+      "lib/**"
+    ]
+  },
+  "dependencies": {
+    "urltools": "^0.4.1"
+  }
+}
