@@ -51,4 +51,25 @@ describe('assetgraph-rollup', function () {
     const bundleJavaScript = htmlAsset.outgoingRelations[0].to;
     expect(bundleJavaScript.text, 'to contain', 'Hello');
   });
+
+  it('should extract a source map from rollup and apply it to the bundle asset', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(__dirname, '..', 'testdata', 'single-import'),
+    });
+
+    const [htmlAsset] = await assetGraph.loadAssets('/index.html');
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+
+    await assetgraphRollup(assetGraph, htmlAsset);
+
+    const bundleJavaScript = htmlAsset.outgoingRelations[0].to;
+
+    const consoleLogStatement = bundleJavaScript.parseTree.body[0].body.body[0];
+    expect(consoleLogStatement.loc, 'to satisfy', {
+      source: `${assetGraph.root}imported.js`,
+      start: { line: 1, column: 23 },
+      end: { line: 1, column: 43 },
+    });
+  });
 });
