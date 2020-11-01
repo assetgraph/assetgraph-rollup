@@ -46,7 +46,5 @@
       "lib/**"
     ]
   },
-  "dependencies": {
-    "urltools": "^0.4.1"
-  }
+  "dependencies": {}
 }
