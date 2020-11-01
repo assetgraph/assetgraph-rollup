@@ -1,0 +1,6 @@
+{
+  "reporter": "spec",
+  "timeout": 20000,
+  "recursive": true,
+  "checkLeaks": true
+}
