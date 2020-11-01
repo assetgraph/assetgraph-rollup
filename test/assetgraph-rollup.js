@@ -22,11 +22,6 @@ describe('assetgraph-rollup', function () {
     await assetGraph.populate({ followRelations: { crossorigin: false } });
 
     await assetgraphRollup(assetGraph, htmlAsset);
-    // FIXME: This is just for testing:
-    await assetGraph.writeAssetsToDisc(
-      { protocol: 'file:', isLoaded: true, isRedirect: false },
-      'foo'
-    );
   });
 
   it('should bundle assets that are not found on disc', async function () {
