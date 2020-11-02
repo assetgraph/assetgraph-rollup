@@ -1,0 +1,35 @@
+<!doctype html>
+<meta http-equiv=Content-Type content="text/html;charset=utf-8">
+<title>FAQ - Map Grid Finder</title>
+<link rel=stylesheet href=../lib/index.css />
+<header>
+	<a href=.>Home</a>
+</header>
+
+<article>
+	<h1>FAQ</h1>
+
+	<h2 id=basic>How do I use the tool?</h2>
+	<p>Once you have selected your image simply click on grid intersections until the grid looks right. To get the fastest results try to click intersections that the currently proposed grid is far away from.</p>
+	<p>There is also a <a href="https://youtu.be/omnuXWuW6Ls">demo video</a> that walks through a quick example.</p>
+
+	<h2 id=tiny>The tools is suggesting a tiny grid!</h2>
+	<p>The largest grid that adequately <i>explains</i> the points you have given will be displayed. There are two main reasons that you get a smaller grid than you expected.</p>
+	<ol>
+		<li>Inaccurate clicks can cause the grid to become smaller than expected. For example if you clicked roughly in the middle of a grid cell halving the grid size will "explain" that point, without causing extra error in the others. In this case the best option is generally to start over and click carefully, although sometimes making many more accurate clicks can result in the correct prediction.</li>
+		<li>The map isn't actually a square grid. It is not uncommon to find battlemaps online that have non-square grids. Often the grid will be on an angle, skewed or change size throughout the map. This is frequently seen on maps that were designed for tabletop-use where an accurate grid was not important like it is on today's virtual tabletops. Unfortunately there is no great solution in this case. If you want to find the best aproximation try selecting points in a small area of the map, then once you have the approximate cell size import into your VTT and try to find an acceptable offset manually.</li>
+	</ol>
+
+	<h2 id=non-integer>Why is it suggesting a non-integer cell size?</h2>
+	<p>The cell sized is based off of the farthest away points in either dimension. This will be the farther apart pair of the top and bottommost points, or left and rightmost points. If these points are not accurate the cells size won't be perfect.</p>
+	<p>You can either round the number in your head and see if it works, or carefully select points as far away as possible to get the most accurate calculation.</p>
+
+	<h2 id=huge>The suggested grid is too large!</h2>
+	<p>If the suggested grid is too large simply click on the missed corners and the suggestion will adjust. Note that there is a hardcoded minimum of 8 pixels per cell.</p>
+
+	<h2 id=remove>Can I remove a point?</h2>
+	<p>Sure thing, just middle click it!</p>
+
+	<h2 id=help>I have a suggestion or would like to help out!</h2>
+	<p>The code is free on <a href="https://gitlab.com/kevincox/gridfinder">GitLab</a> and <a href="https://gitlab.com/kevincox/gridfinder/-/issues">report issues in the tracker</a>.</p>
+</article>

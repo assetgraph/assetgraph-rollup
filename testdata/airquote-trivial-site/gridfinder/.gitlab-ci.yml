@@ -1,0 +1,36 @@
+image: node
+
+build:
+  stage: build
+  script:
+  - npm ci
+  - node build.mjs
+  artifacts:
+    paths:
+    - dist/
+
+deploy-review:
+  stage: deploy
+  needs: [build]
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://cloudflare-ipfs.com/ipfs/$HASH
+  script:
+  - npm ci
+  - node_modules/.bin/ipfs-deploy -p infura dist >env-hash
+  - echo "HASH=$(cat env-hash)" >>env
+  artifacts:
+    reports:
+      dotenv: env
+
+deploy-prod:
+  stage: deploy
+  needs: [build]
+  environment:
+    name: prod
+    url: https://mapdim.kevincox.ca
+  only:
+    - master
+  script:
+  - npm ci
+  - node_modules/.bin/ipfs-deploy -p infura -p pinata -d cloudflare dist
