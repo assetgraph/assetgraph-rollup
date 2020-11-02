@@ -68,8 +68,33 @@ describe('assetgraph-rollup', function () {
     const consoleLogStatement = bundleJavaScript.parseTree.body[0].body.body[0];
     expect(consoleLogStatement.loc, 'to satisfy', {
       source: `${assetGraph.root}imported.js`,
-      start: { line: 1, column: 23 },
-      end: { line: 1, column: 43 },
+      start: { line: 1, column: 22 },
+      end: { line: 1, column: 22 },
+    });
+  });
+
+  it('should support existing source maps in the files that go into the bundle', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(
+        __dirname,
+        '..',
+        'testdata',
+        'existing-source-map'
+      ),
+    });
+
+    const [htmlAsset] = await assetGraph.loadAssets('/index.html');
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+    await assetGraph.applySourceMaps();
+    await assetgraphRollup(assetGraph, htmlAsset);
+
+    const bundleJavaScript = htmlAsset.outgoingRelations[0].to;
+
+    const iife = bundleJavaScript.parseTree.body[0].expression.callee;
+    expect(iife.loc, 'to satisfy', {
+      source: `${assetGraph.root}jquery-1.10.1.js`,
+      start: { line: 14, column: 0 },
     });
   });
 });
