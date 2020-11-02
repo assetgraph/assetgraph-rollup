@@ -1,4 +1,5 @@
 /coverage/
+/testdata/
 
 # Don't fight npm i --save
 package.json
