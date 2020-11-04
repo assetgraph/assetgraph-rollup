@@ -86,6 +86,8 @@ describe('assetgraph-rollup', function () {
     expect(firstBundleDep.text, 'to contain', 'export function greet');
   });
 
+  it('should bundle entry points on multiple HTML pages with shared bundles');
+
   it('should bundle a standalone JavaScript asset', async function () {
     const assetGraph = new AssetGraph({
       root: pathModule.resolve(
@@ -110,6 +112,8 @@ describe('assetgraph-rollup', function () {
       `greet('the first entry point')`
     );
   });
+
+  it('should bundle multiple standalone JavaScript assets with shared bundles');
 
   it('should bundle an inline script');
 
