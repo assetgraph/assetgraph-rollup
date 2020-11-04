@@ -86,6 +86,31 @@ describe('assetgraph-rollup', function () {
     expect(firstBundleDep.text, 'to contain', 'export function greet');
   });
 
+  it('should bundle a standalone JavaScript asset', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(
+        __dirname,
+        '..',
+        'testdata',
+        'one-page-multiple-entry-points'
+      ),
+    });
+
+    const [javaScriptAsset] = await assetGraph.loadAssets(
+      '/first-entrypoint.js'
+    );
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+    await assetGraph.applySourceMaps();
+    await assetgraphRollup(assetGraph, javaScriptAsset);
+
+    expect(
+      javaScriptAsset.text,
+      'to contain',
+      `greet('the first entry point')`
+    );
+  });
+
   it('should bundle an inline script');
 
   it('should extract a source map from rollup and apply it to the bundle asset', async function () {
