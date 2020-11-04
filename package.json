@@ -7,7 +7,7 @@
     "test": "test"
   },
   "devDependencies": {
-    "assetgraph": "^6.2.1",
+    "assetgraph": "^6.2.2",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-standard": "^16.0.0",
