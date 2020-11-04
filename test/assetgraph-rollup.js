@@ -52,6 +52,42 @@ describe('assetgraph-rollup', function () {
     expect(bundleJavaScript.text, 'to contain', 'Hello');
   });
 
+  it('should support multiple entry points in one Html asset', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(
+        __dirname,
+        '..',
+        'testdata',
+        'one-page-multiple-entry-points'
+      ),
+    });
+
+    const [htmlAsset] = await assetGraph.loadAssets('/index.html');
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+    await assetGraph.applySourceMaps();
+    await assetgraphRollup(assetGraph, htmlAsset);
+
+    const firstBundleJavaScript = htmlAsset.outgoingRelations[0].to;
+    const secondBundleJavaScript = htmlAsset.outgoingRelations[1].to;
+    expect(
+      firstBundleJavaScript.text,
+      'to contain',
+      `greet('the first entry point')`
+    );
+    expect(
+      secondBundleJavaScript.text,
+      'to contain',
+      `greet('the second entry point')`
+    );
+    const firstBundleDep = firstBundleJavaScript.outgoingRelations[0].to;
+    const secondBundleDep = secondBundleJavaScript.outgoingRelations[0].to;
+    expect(firstBundleDep, 'to be', secondBundleDep);
+    expect(firstBundleDep.text, 'to contain', 'export function greet');
+  });
+
+  it('should bundle an inline script');
+
   it('should extract a source map from rollup and apply it to the bundle asset', async function () {
     const assetGraph = new AssetGraph({
       root: pathModule.resolve(__dirname, '..', 'testdata', 'single-import'),
