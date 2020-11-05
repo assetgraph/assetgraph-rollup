@@ -113,7 +113,39 @@ describe('assetgraph-rollup', function () {
     );
   });
 
-  it('should bundle multiple standalone JavaScript assets with shared bundles');
+  it('should bundle multiple standalone JavaScript assets with shared bundles', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(
+        __dirname,
+        '..',
+        'testdata',
+        'one-page-multiple-entry-points'
+      ),
+    });
+
+    const javaScriptAssets = await assetGraph.loadAssets([
+      '/first-entrypoint.js',
+      '/second-entrypoint.js',
+    ]);
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+    await assetgraphRollup(assetGraph, javaScriptAssets);
+
+    expect(
+      javaScriptAssets[0].text,
+      'to contain',
+      `greet('the first entry point')`
+    );
+    expect(
+      javaScriptAssets[1].text,
+      'to contain',
+      `greet('the second entry point')`
+    );
+    const firstBundleDep = javaScriptAssets[0].outgoingRelations[0].to;
+    const secondBundleDep = javaScriptAssets[1].outgoingRelations[0].to;
+    expect(firstBundleDep, 'to be', secondBundleDep);
+    expect(firstBundleDep.text, 'to contain', 'export function greet');
+  });
 
   it('should bundle an inline script');
 
