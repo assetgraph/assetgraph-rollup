@@ -86,7 +86,68 @@ describe('assetgraph-rollup', function () {
     expect(firstBundleDep.text, 'to contain', 'export function greet');
   });
 
-  it('should bundle entry points on multiple HTML pages with shared bundles');
+  it('should bundle entry points on multiple HTML pages with shared bundles', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(
+        __dirname,
+        '..',
+        'testdata',
+        'two-pages-multiple-entry-points'
+      ),
+    });
+
+    const htmlAssets = await assetGraph.loadAssets([
+      '/first-page.html',
+      '/second-page.html',
+    ]);
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+    await assetgraphRollup(assetGraph, htmlAssets);
+
+    const firstPageFirstBundleJavaScript =
+      htmlAssets[0].outgoingRelations[0].to;
+    const firstPageSecondBundleJavaScript =
+      htmlAssets[0].outgoingRelations[1].to;
+    expect(
+      firstPageFirstBundleJavaScript.text,
+      'to contain',
+      `greet('the first entry point of the first page')`
+    );
+    expect(
+      firstPageSecondBundleJavaScript.text,
+      'to contain',
+      `greet('the second entry point of the first page')`
+    );
+
+    const secondPageFirstBundleJavaScript =
+      htmlAssets[1].outgoingRelations[0].to;
+    const secondPageSecondBundleJavaScript =
+      htmlAssets[1].outgoingRelations[1].to;
+    expect(
+      secondPageFirstBundleJavaScript.text,
+      'to contain',
+      `greet('the first entry point of the second page')`
+    );
+    expect(
+      secondPageSecondBundleJavaScript.text,
+      'to contain',
+      `greet('the second entry point of the second page')`
+    );
+    const firstPageFirstBundleDep =
+      firstPageFirstBundleJavaScript.outgoingRelations[0].to;
+    const firstPageSecondBundleDep =
+      firstPageSecondBundleJavaScript.outgoingRelations[0].to;
+    expect(firstPageFirstBundleDep, 'to be', firstPageSecondBundleDep);
+    expect(firstPageFirstBundleDep.text, 'to contain', 'export function greet');
+
+    const secondPageFirstBundleDep =
+      secondPageFirstBundleJavaScript.outgoingRelations[0].to;
+    const secondPageSecondBundleDep =
+      secondPageSecondBundleJavaScript.outgoingRelations[0].to;
+    expect(secondPageFirstBundleDep, 'to be', secondPageSecondBundleDep);
+
+    expect(firstPageFirstBundleDep, 'to be', secondPageSecondBundleDep);
+  });
 
   it('should bundle a standalone JavaScript asset', async function () {
     const assetGraph = new AssetGraph({
