@@ -314,4 +314,17 @@ greet('the first entry point');</script>`
       ).and('not to contain', 'true'); // Check that the unnecessary if (true) is eliminated
     });
   });
+
+  // Regression test for https://github.com/assetgraph/assetgraph-rollup/issue/2
+  it('should not break when there are no JavaScript entry points in a specified HTML asset', async function () {
+    const assetGraph = new AssetGraph({
+      root: pathModule.resolve(__dirname, '..', 'testdata', 'no-entry-point'),
+    });
+
+    const [htmlAsset] = await assetGraph.loadAssets('/index.html');
+
+    await assetGraph.populate({ followRelations: { crossorigin: false } });
+    await assetGraph.applySourceMaps();
+    await assetgraphRollup(assetGraph, htmlAsset);
+  });
 });
