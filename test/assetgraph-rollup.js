@@ -285,4 +285,33 @@ greet('the first entry point');</script>`
       start: { line: 14, column: 0 },
     });
   });
+
+  describe('with a rollup.config.js', function () {
+    it('should honor the configuration options', async function () {
+      const assetGraph = new AssetGraph({
+        root: pathModule.resolve(__dirname, '..', 'testdata', 'config'),
+      });
+
+      const [htmlAsset] = await assetGraph.loadAssets('/index.html');
+
+      await assetGraph.populate({ followRelations: { crossorigin: false } });
+      await assetGraph.applySourceMaps();
+      await assetgraphRollup(assetGraph, htmlAsset, {
+        configFileName: pathModule.resolve(
+          __dirname,
+          '..',
+          'testdata',
+          'config',
+          'rollup.config.js'
+        ),
+      });
+
+      const bundleJavaScript = htmlAsset.outgoingRelations[0].to;
+      expect(
+        bundleJavaScript.text,
+        'to start with',
+        '/*! Here is a banner specified in the config */'
+      ).and('not to contain', 'true'); // Check that the unnecessary if (true) is eliminated
+    });
+  });
 });

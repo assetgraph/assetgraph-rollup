@@ -20,6 +20,7 @@
     "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "rollup": "^2.32.1",
+    "rollup-plugin-terser": "^7.0.2",
     "unexpected": "^11.15.0",
     "unexpected-assetgraph": "^1.1.2"
   },
