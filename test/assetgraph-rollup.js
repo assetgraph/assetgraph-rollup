@@ -42,8 +42,7 @@ describe('assetgraph-rollup', function () {
     const htmlAsset = assetGraph.addAsset({
       type: 'Html',
       url: 'https://example.com/index.html',
-      text:
-        '<!DOCTYPE html><script type="module" src="entrypoint.js"></script>',
+      text: '<!DOCTYPE html><script type="module" src="entrypoint.js"></script>',
     });
 
     await assetgraphRollup(assetGraph, htmlAsset);
